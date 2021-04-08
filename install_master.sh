@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# sostituisci i nomi della variabile
-PRIVATE_KEY=$1
-
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
@@ -15,7 +12,7 @@ sudo apt-get -y install python3-pip
 
 sudo apt-get -y install openjdk-8-jdk
 
-wget https://www-us.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
+wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
 sudo tar zxvf hadoop-2.7.7.tar.gz
 sudo mv ./hadoop-2.7.7 /home/ubuntu/hadoop
 rm hadoop-2.7.7.tar.gz
@@ -28,27 +25,27 @@ export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home
 
 source /home/ubuntu/.profile
 
-echo 'Host namenode
+echo "Host namenode
 HostName namenode
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$PRIVATE_KEY
+IdentityFile /home/ubuntu/.ssh/$1
 
 Host datanode1
 HostName namenode
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$PRIVATE_KEY
+IdentityFile /home/ubuntu/.ssh/$1
 
 Host datanode2
 HostName datanode2
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$PRIVATE_KEY' | sudo tee /home/ubuntu/.ssh/config
+IdentityFile /home/ubuntu/.ssh/$1" | sudo tee /home/ubuntu/.ssh/config
 
 echo '172.31.67.1 namenode
 172.31.67.2 datanode1
 172.31.67.3 datanode2' | sudo tee --append /etc/hosts
 
-ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P ''
-cat /home/ubuntu/.ssh/id_rsa.pub »/home/ubuntu/.ssh/authorized_keys
+ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P '' -y
+cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys
 ssh datanode1 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
 ssh datanode2 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
 
@@ -197,6 +194,3 @@ $HADOOP_HOME/sbin/start-yarn.sh
 $HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver
 
 ./spark/sbin/start-master.sh
-
-ssh datanode1 'bash -s' < install_slaves.sh $PRIVATE_KEY $IPMASTER $IPSLAVE1 $IPSLAVE2 $DNSMASTER
-ssh datanode2 'bash -s' < install_slaves.sh $PRIVATE_KEY $IPMASTER $IPSLAVE1 $IPSLAVE2 $DNSMASTER

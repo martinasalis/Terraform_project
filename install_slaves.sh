@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# sostituisci i nomi della variabile
-PRIVATE_KEY=$1
-
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
@@ -15,7 +12,7 @@ sudo apt-get -y install python3-pip
 
 sudo apt-get -y install openjdk-8-jdk
 
-wget https://www-us.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
+wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
 sudo tar zxvf hadoop-2.7.7.tar.gz
 sudo mv ./hadoop-2.7.7 /home/ubuntu/hadoop
 rm hadoop-2.7.7.tar.gz
@@ -165,4 +162,4 @@ sudo cp spark/conf/spark-env.sh.template spark/conf/spark-env.sh
 echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
 export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append spark/conf/spark-env.sh
 
-./spark/sbin/start-slave.sh spark://namenode:7077
+./spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077
