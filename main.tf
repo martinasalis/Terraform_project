@@ -87,7 +87,7 @@ resource "aws_instance" "slaves" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_slaves.sh",
-      "/bin/bash /tmp/install_slaves.sh Key_01.pem",
+      "/bin/bash /tmp/install_slaves.sh",
     ]
 
     connection {
