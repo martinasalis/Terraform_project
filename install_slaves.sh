@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# sostituisci i nomi delle seguenti variabili
+# sostituisci i nomi della variabile
 PRIVATE_KEY=$1
-IPMASTER=$2
-IPSLAVE1=$3
-IPSLAVE2=$4
-DNSMASTER=$5
 
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
@@ -32,9 +28,9 @@ export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home
 
 source /home/ubuntu/.profile
 
-echo '$IPMASTER namenode
-$IPSLAVE1 datanode1
-$IPSLAVE2 datanode2' | sudo tee --append /etc/hosts
+echo '172.31.67.1 namenode
+172.31.67.2 datanode1
+172.31.67.3 datanode2' | sudo tee --append /etc/hosts
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -58,7 +54,7 @@ limitations under the License. See accompanying LICENSE file.
 <configuration>
 <property>
 <name>fs.defaultFS</name>
-<value>hdfs://$IPMASTER:9000</value>
+<value>hdfs://172.31.67.1:9000</value>
 </property>
 </configuration>' | sudo tee $HADOOP_CONF_DIR/core-site.xml
 
@@ -89,7 +85,7 @@ limitations under the License. See accompanying LICENSE file.
 </property>
 <property>
 <name>yarn.resourcemanager.hostname</name>
-<value>$IPMASTER</value>
+<value>172.31.67.1</value>
 </property>
 </configuration>' | sudo tee $HADOOP_CONF_DIR/yarn-site.xml
 
@@ -115,7 +111,7 @@ limitations under the License. See accompanying LICENSE file.
 <configuration>
 <property>
 <name>mapreduce.jobtracker.address</name>
-<value>$IPMASTER:54311</value>
+<value>172.31.67.1:54311</value>
 </property>
 <property>
 <name>mapreduce.framework.name</name>
@@ -166,7 +162,7 @@ rm spark-3.0.1-bin-hadoop2.7.tgz
 
 sudo cp spark/conf/spark-env.sh.template spark/conf/spark-env.sh
 
-echo 'export SPARK_MASTER_HOST="$DNSMASTER"
+echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
 export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append spark/conf/spark-env.sh
 
 ./spark/sbin/start-slave.sh spark://namenode:7077
