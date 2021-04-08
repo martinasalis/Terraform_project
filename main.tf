@@ -22,19 +22,20 @@ resource "aws_security_group" "all_traffic" {
 }
 
 resource "aws_instance" "master" {
+  subnet_id = "subnet-2eea8420"
   ami = "ami-042e8287309f5df03"
   instance_type = "t2.large"
-  key_name = "aws_private_key_name"
+  key_name = var.aws_private_key_name
   tags = {
     Name = "master"
   }
-  private_ip = "172.31.67.1"
-  private_dns = "ip-172-31-67-1.ec2.internal"
+  private_ip = var.master_ip
+  #private_dns = var.master_dns
   vpc_security_group_ids = [aws_security_group.all_traffic.id]
 
   provisioner "file" {
     source = "install_master.sh"
-    destination = "/home/install_master.sh"
+    destination = "/tmp/install_master.sh"
 
     connection {
       host = self.public_dns
@@ -44,10 +45,10 @@ resource "aws_instance" "master" {
     }
   }
 
-  provisioner "remote_exec" {
+  provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/install_master.sh",
-      "/home/install_master.sh",
+      "chmod +x /tmp/install_master.sh",
+      "/bin/bash /tmp/install_master.sh Key_01.pem",
     ]
 
     connection {
@@ -60,9 +61,10 @@ resource "aws_instance" "master" {
 }
 
 resource "aws_instance" "slaves" {
+  subnet_id = "subnet-2eea8420"
   ami = "ami-042e8287309f5df03"
   instance_type = "t2.large"
-  key_name = "aws_private_key_name"
+  key_name = var.aws_private_key_name
   count = var.slaves_count
   tags = {
     Name = lookup(var.slaves_name, count.index)
@@ -72,7 +74,7 @@ resource "aws_instance" "slaves" {
 
   provisioner "file" {
     source = "install_slaves.sh"
-    destination = "/home/install_slaves.sh"
+    destination = "/tmp/install_slaves.sh"
 
     connection {
       host = self.public_dns
@@ -82,10 +84,10 @@ resource "aws_instance" "slaves" {
     }
   }
 
-  provisioner "remote_exec" {
+  provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/install_slaves.sh",
-      "/home/install_slaves.sh",
+      "chmod +x /tmp/install_slaves.sh",
+      "/bin/bash /tmp/install_slaves.sh Key_01.pem",
     ]
 
     connection {

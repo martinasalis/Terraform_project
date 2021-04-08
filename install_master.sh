@@ -181,7 +181,7 @@ datanode2' | sudo tee $HADOOP_CONF_DIR/slaves
 
 sudo chown -R ubuntu $HADOOP_HOME
 
-wget https://downloads.apache.org/spark/spark-3.0.1/spark-3.0.1-binhadoop2.7.tgz
+wget https://archive.apache.org/dist/spark/spark-3.0.1/spark-3.0.1-bin-hadoop2.7.tgz
 tar xvzf spark-3.0.1-bin-hadoop2.7.tgz
 sudo mv ./spark-3.0.1-bin-hadoop2.7 /home/ubuntu/spark
 rm spark-3.0.1-bin-hadoop2.7.tgz
