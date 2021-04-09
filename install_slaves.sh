@@ -4,16 +4,16 @@ until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
 
-sudo apt-get -y update && sudo apt-get -y dist-upgrade
+sudo apt-get -y update && sudo apt-get -y dist-upgrade > /dev/null
 
-sudo apt-get -y install git
-sudo apt-get -y install python3
-sudo apt-get -y install python3-pip
+sudo apt-get -y install git > /dev/null
+sudo apt-get -y install python3 > /dev/null
+sudo apt-get -y install python3-pip > /dev/null
 
-sudo apt-get -y install openjdk-8-jdk
+sudo apt-get -y install openjdk-8-jdk > /dev/null
 
-wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
-sudo tar zxvf hadoop-2.7.7.tar.gz
+wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz > /dev/null
+sudo tar zxvf hadoop-2.7.7.tar.gz > /dev/null
 sudo mv ./hadoop-2.7.7 /home/ubuntu/hadoop
 rm hadoop-2.7.7.tar.gz
 
@@ -21,13 +21,13 @@ echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 export HADOOP_HOME=/home/ubuntu/hadoop
 export PATH=$PATH:/home/ubuntu/hadoop/bin
-export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home/ubuntu/.profile
+export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home/ubuntu/.profile > /dev/null
 
 source /home/ubuntu/.profile
 
 echo '172.31.67.1 namenode
 172.31.67.2 datanode1
-172.31.67.3 datanode2' | sudo tee --append /etc/hosts
+172.31.67.3 datanode2' | sudo tee --append /etc/hosts > /dev/null
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -53,7 +53,7 @@ limitations under the License. See accompanying LICENSE file.
 <name>fs.defaultFS</name>
 <value>hdfs://172.31.67.1:9000</value>
 </property>
-</configuration>' | sudo tee $HADOOP_CONF_DIR/core-site.xml
+</configuration>' | sudo tee $HADOOP_CONF_DIR/core-site.xml > /dev/null
 
 echo '<?xml version="1.0"?>
 <!--
@@ -84,7 +84,7 @@ limitations under the License. See accompanying LICENSE file.
 <name>yarn.resourcemanager.hostname</name>
 <value>172.31.67.1</value>
 </property>
-</configuration>' | sudo tee $HADOOP_CONF_DIR/yarn-site.xml
+</configuration>' | sudo tee $HADOOP_CONF_DIR/yarn-site.xml > /dev/null
 
 sudo cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
 
@@ -114,7 +114,7 @@ limitations under the License. See accompanying LICENSE file.
 <name>mapreduce.framework.name</name>
 <value>yarn</value>
 </property>
-</configuration>' | sudo tee $HADOOP_CONF_DIR/mapred-site.xml
+</configuration>' | sudo tee $HADOOP_CONF_DIR/mapred-site.xml > /dev/null
 
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -146,20 +146,20 @@ limitations under the License. See accompanying LICENSE file.
 <name>dfs.datanode.data.dir</name>
 <value>file:///home/ubuntu/hadoop/data/hdfs/datanode</value>
 </property>
-</configuration>' | sudo tee $HADOOP_CONF_DIR/hdfs-site.xml
+</configuration>' | sudo tee $HADOOP_CONF_DIR/hdfs-site.xml > /dev/null
 
 sudo mkdir -p $HADOOP_HOME/data/hdfs/datanode
 
 sudo chown -R ubuntu $HADOOP_HOME
 
-wget https://archive.apache.org/dist/spark/spark-3.0.1/spark-3.0.1-bin-hadoop2.7.tgz
-tar xvzf spark-3.0.1-bin-hadoop2.7.tgz
+wget https://archive.apache.org/dist/spark/spark-3.0.1/spark-3.0.1-bin-hadoop2.7.tgz > /dev/null
+tar xvzf spark-3.0.1-bin-hadoop2.7.tgz > /dev/null
 sudo mv ./spark-3.0.1-bin-hadoop2.7 /home/ubuntu/spark
 rm spark-3.0.1-bin-hadoop2.7.tgz
 
-sudo cp spark/conf/spark-env.sh.template spark/conf/spark-env.sh
+sudo cp /home/ubuntu/spark/conf/spark-env.sh.template /home/ubuntu/spark/conf/spark-env.sh
 
 echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
-export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append spark/conf/spark-env.sh
+export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append /home/ubuntu/spark/conf/spark-env.sh > /dev/null
 
-./spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077
+/home/ubuntu/spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077 > /dev/null
