@@ -4,13 +4,17 @@ until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
 
-sudo apt-get -y update && sudo apt-get -y dist-upgrade > /dev/null
+sudo apt-get -y update > /dev/null
+sudo apt-get -y dist-upgrade > /dev/null
 
 sudo apt-get -y install git > /dev/null
 sudo apt-get -y install python3 > /dev/null
 sudo apt-get -y install python3-pip > /dev/null
 
 sudo apt-get -y install openjdk-8-jdk > /dev/null
+
+echo 'StrictHostKeyChecking no
+UserKnownHostsFile /dev/null' | sudo tee --append /etc/ssh/ssh_config > /dev/null
 
 wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz > /dev/null
 sudo tar zxvf hadoop-2.7.7.tar.gz > /dev/null
@@ -25,29 +29,32 @@ export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home
 
 source /home/ubuntu/.profile
 
-echo 'Host namenode
+echo "Host namenode
 HostName namenode
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/key.pem
+IdentityFile /home/ubuntu/.ssh/$1
 
 Host datanode1
-HostName namenode
+HostName datanode1
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/key.pem
+IdentityFile /home/ubuntu/.ssh/$1
 
 Host datanode2
 HostName datanode2
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/key.pem' | sudo tee /home/ubuntu/.ssh/config > /dev/null
+IdentityFile /home/ubuntu/.ssh/$1" | sudo tee /home/ubuntu/.ssh/config > /dev/null
 
 echo '172.31.67.1 namenode
 172.31.67.2 datanode1
 172.31.67.3 datanode2' | sudo tee --append /etc/hosts > /dev/null
 
-ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P '' -y > /dev/null
+sudo chmod 700 /home/ubuntu/.ssh
+ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P ''
+sudo touch /home/ubuntu/.ssh/authorized_keys
+sudo chmod 600 /home/ubuntu/.ssh/authorized_keys
 cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys
-ssh datanode1 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub > /dev/null
-ssh datanode2 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub > /dev/null
+ssh datanode1 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode2 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -171,10 +178,10 @@ limitations under the License. See accompanying LICENSE file.
 sudo mkdir -p $HADOOP_HOME/data/hdfs/namenode
 sudo mkdir -p $HADOOP_HOME/data/hdfs/datanode
 
-echo 'namenode' | sudo tee $HADOOP_CONF_DIR/masters
+echo 'namenode' | sudo tee $HADOOP_CONF_DIR/masters > /dev/null
 
 echo 'datanode1
-datanode2' | sudo tee $HADOOP_CONF_DIR/slaves
+datanode2' | sudo tee $HADOOP_CONF_DIR/slaves > /dev/null
 
 sudo chown -R ubuntu $HADOOP_HOME
 

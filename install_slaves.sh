@@ -4,7 +4,8 @@ until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
 
-sudo apt-get -y update && sudo apt-get -y dist-upgrade > /dev/null
+sudo apt-get -y update > /dev/null
+sudo apt-get -y dist-upgrade > /dev/null
 
 sudo apt-get -y install git > /dev/null
 sudo apt-get -y install python3 > /dev/null
@@ -162,4 +163,4 @@ sudo cp /home/ubuntu/spark/conf/spark-env.sh.template /home/ubuntu/spark/conf/sp
 echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
 export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append /home/ubuntu/spark/conf/spark-env.sh > /dev/null
 
-/home/ubuntu/spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077 > /dev/null
+/home/ubuntu/spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077

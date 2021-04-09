@@ -30,20 +30,7 @@ resource "aws_instance" "master" {
     Name = "master"
   }
   private_ip = var.master_ip
-  #private_dns = var.master_dns
   vpc_security_group_ids = [aws_security_group.all_traffic.id]
-  
-  provisioner "file" {
-    source = var.aws_private_key_path
-    destination = "/home/ubuntu/.ssh/key.pem"
-
-    connection {
-      host = self.public_dns
-      type = "ssh"
-      user = "ubuntu"
-      private_key = file(var.aws_private_key_path)
-    }
-  }
 
   provisioner "file" {
     source = "install_master.sh"
@@ -56,11 +43,15 @@ resource "aws_instance" "master" {
       private_key = file(var.aws_private_key_path)
     }
   }
+  
+  provisioner "local-exec" {
+    command = "scp -o StrictHostKeyChecking=no -i '${var.aws_private_key_path}' ${var.aws_private_key_path} ubuntu@${self.public_dns}:/home/ubuntu/.ssh"
+  }
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_master.sh",
-      "/bin/bash /tmp/install_master.sh",
+      "/bin/bash /tmp/install_master.sh ${var.aws_private_key_path}",
     ]
 
     connection {
