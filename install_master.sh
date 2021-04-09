@@ -25,20 +25,20 @@ export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home
 
 source /home/ubuntu/.profile
 
-echo "Host namenode
+echo 'Host namenode
 HostName namenode
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$1
+IdentityFile /home/ubuntu/.ssh/key.pem
 
 Host datanode1
 HostName namenode
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$1
+IdentityFile /home/ubuntu/.ssh/key.pem
 
 Host datanode2
 HostName datanode2
 User ubuntu
-IdentityFile /home/ubuntu/.ssh/$1" | sudo tee /home/ubuntu/.ssh/config
+IdentityFile /home/ubuntu/.ssh/key.pem' | sudo tee /home/ubuntu/.ssh/config
 
 echo '172.31.67.1 namenode
 172.31.67.2 datanode1
@@ -193,4 +193,4 @@ $HADOOP_HOME/sbin/start-dfs.sh
 $HADOOP_HOME/sbin/start-yarn.sh
 $HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver
 
-./spark/sbin/start-master.sh
+/home/ubuntu/spark/sbin/start-master.sh
