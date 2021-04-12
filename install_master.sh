@@ -11,6 +11,8 @@ sudo apt-get -y install git > /dev/null
 sudo apt-get -y install python3 > /dev/null
 sudo apt-get -y install python3-pip > /dev/null
 
+pip3 install numpy > /dev/null
+
 sudo apt-get -y install openjdk-8-jdk > /dev/null
 
 echo 'StrictHostKeyChecking no
@@ -24,8 +26,9 @@ rm hadoop-2.7.7.tar.gz
 echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 export HADOOP_HOME=/home/ubuntu/hadoop
-export PATH=$PATH:/home/ubuntu/hadoop/bin
-export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop' | sudo tee --append /home/ubuntu/.profile > /dev/null
+export PATH=$PATH:$HADOOP_HOME/bin
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export PYSPARK_PYTHON=python3' | sudo tee --append /home/ubuntu/.profile > /dev/null
 
 source /home/ubuntu/.profile
 
@@ -193,7 +196,7 @@ rm spark-3.0.1-bin-hadoop2.7.tgz
 sudo cp /home/ubuntu/spark/conf/spark-env.sh.template /home/ubuntu/spark/conf/spark-env.sh
 
 echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
-export HADOOP_CONF_DIR="/home/ubuntu/hadoop/conf"' | sudo tee --append /home/ubuntu/spark/conf/spark-env.sh > /dev/null
+export HADOOP_CONF_DIR="/home/ubuntu/hadoop/etc/hadoop"' | sudo tee --append /home/ubuntu/spark/conf/spark-env.sh > /dev/null
 
 hdfs namenode -format
 $HADOOP_HOME/sbin/start-dfs.sh
