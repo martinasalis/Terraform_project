@@ -35,19 +35,17 @@ variable "master_dns" {
 
 variable "slaves_count" {
   type = number
-  default = 2
+  default = 1
 }
 
 variable "slaves_name" {
   default = {
     "0" = "slave_0"
-    "1" = "slave_1"
   }
 }
 
 variable "slaves_ip" {
   default = {
     "0" = "172.31.67.2"
-    "1" = "172.31.67.3"
   }
 }

@@ -30,8 +30,7 @@ export PYSPARK_PYTHON=python3' | sudo tee --append /home/ubuntu/.profile > /dev/
 source /home/ubuntu/.profile
 
 echo '172.31.67.1 namenode
-172.31.67.2 datanode1
-172.31.67.3 datanode2' | sudo tee --append /etc/hosts > /dev/null
+172.31.67.2 datanode1' | sudo tee --append /etc/hosts > /dev/null
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -55,7 +54,7 @@ limitations under the License. See accompanying LICENSE file.
 <configuration>
 <property>
 <name>fs.defaultFS</name>
-<value>hdfs://172.31.67.1:9000</value>
+<value>hdfs://namenode:9000</value>
 </property>
 </configuration>' | sudo tee $HADOOP_CONF_DIR/core-site.xml > /dev/null
 
@@ -86,7 +85,7 @@ limitations under the License. See accompanying LICENSE file.
 </property>
 <property>
 <name>yarn.resourcemanager.hostname</name>
-<value>172.31.67.1</value>
+<value>namenode</value>
 </property>
 </configuration>' | sudo tee $HADOOP_CONF_DIR/yarn-site.xml > /dev/null
 
@@ -112,7 +111,7 @@ limitations under the License. See accompanying LICENSE file.
 <configuration>
 <property>
 <name>mapreduce.jobtracker.address</name>
-<value>172.31.67.1:54311</value>
+<value>namenode:54311</value>
 </property>
 <property>
 <name>mapreduce.framework.name</name>
@@ -161,9 +160,21 @@ tar xvzf spark-3.0.1-bin-hadoop2.7.tgz > /dev/null
 sudo mv ./spark-3.0.1-bin-hadoop2.7 /home/ubuntu/spark
 rm spark-3.0.1-bin-hadoop2.7.tgz
 
-sudo cp /home/ubuntu/spark/conf/spark-env.sh.template /home/ubuntu/spark/conf/spark-env.sh
+echo '
+export SPARK_HOME=/home/ubuntu/spark
+export PATH=$PATH:$SPARK_HOME/bin' | sudo tee --append /home/ubuntu/.profile > /dev/null
 
-echo 'export SPARK_MASTER_HOST="ip-172-31-67-1.ec2.internal"
-export HADOOP_CONF_DIR="/home/ubuntu/hadoop/etc/hadoop"' | sudo tee --append /home/ubuntu/spark/conf/spark-env.sh > /dev/null
+source /home/ubuntu/.profile
 
-/home/ubuntu/spark/sbin/start-slave.sh spark://ip-172-31-67-1.ec2.internal:7077
+sudo cp $SPARK_HOME/conf/spark-env.sh.template $SPARK_HOME/conf/spark-env.sh
+
+echo 'export SPARK_MASTER_HOST=namenode
+export HADOOP_HOME=/home/ubuntu/hadoop
+export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' | sudo tee --append $SPARK_HOME/conf/spark-env.sh > /dev/null
+
+echo 'datanode1' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
+
+sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
+
+$SPARK_HOME/sbin/start-slave.sh spark://namenode:7077
