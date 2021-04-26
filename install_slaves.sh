@@ -30,7 +30,14 @@ export PYSPARK_PYTHON=python3' | sudo tee --append /home/ubuntu/.profile > /dev/
 source /home/ubuntu/.profile
 
 echo '172.31.67.1 namenode
-172.31.67.2 datanode1' | sudo tee --append /etc/hosts > /dev/null
+172.31.67.2 datanode1
+172.31.67.3 datanode2
+172.31.67.4 datanode3
+172.31.67.5 datanode4
+172.31.67.6 datanode5
+172.31.67.7 datanode6
+172.31.67.8 datanode7
+172.31.67.9 datanode8' | sudo tee --append /etc/hosts > /dev/null
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -173,7 +180,14 @@ export HADOOP_HOME=/home/ubuntu/hadoop
 export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' | sudo tee --append $SPARK_HOME/conf/spark-env.sh > /dev/null
 
-echo 'datanode1' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
+echo 'datanode1
+datanode2
+datanode3
+datanode4
+datanode5
+datanode6
+datanode7
+datanode8' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
 
 sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
 

@@ -40,10 +40,52 @@ IdentityFile /home/ubuntu/.ssh/$1
 Host datanode1
 HostName datanode1
 User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode2
+HostName datanode2
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode3
+HostName datanode3
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode4
+HostName datanode4
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode5
+HostName datanode5
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode6
+HostName datanode6
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode7
+HostName datanode7
+User ubuntu
+IdentityFile /home/ubuntu/.ssh/$1
+
+Host datanode8
+HostName datanode8
+User ubuntu
 IdentityFile /home/ubuntu/.ssh/$1" | sudo tee /home/ubuntu/.ssh/config > /dev/null
 
 echo '172.31.67.1 namenode
-172.31.67.2 datanode1' | sudo tee --append /etc/hosts > /dev/null
+172.31.67.2 datanode1
+172.31.67.3 datanode2
+172.31.67.4 datanode3
+172.31.67.5 datanode4
+172.31.67.6 datanode5
+172.31.67.7 datanode6
+172.31.67.8 datanode7
+172.31.67.9 datanode8' | sudo tee --append /etc/hosts > /dev/null
 
 sudo chmod 700 /home/ubuntu/.ssh
 ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P ''
@@ -51,6 +93,13 @@ sudo touch /home/ubuntu/.ssh/authorized_keys
 sudo chmod 600 /home/ubuntu/.ssh/authorized_keys
 cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys
 ssh datanode1 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode2 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode3 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode4 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode5 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode6 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode7 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
+ssh datanode8 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_rsa.pub
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -176,7 +225,14 @@ sudo mkdir -p $HADOOP_HOME/data/hdfs/datanode
 
 echo 'namenode' | sudo tee $HADOOP_CONF_DIR/masters > /dev/null
 
-echo 'datanode1' | sudo tee $HADOOP_CONF_DIR/slaves > /dev/null
+echo 'datanode1
+datanode2
+datanode3
+datanode4
+datanode5
+datanode6
+datanode7
+datanode8' | sudo tee $HADOOP_CONF_DIR/slaves > /dev/null
 
 sudo chown -R ubuntu $HADOOP_HOME
 
@@ -198,7 +254,14 @@ export HADOOP_HOME=/home/ubuntu/hadoop
 export HADOOP_CONF_DIR=/home/ubuntu/hadoop/etc/hadoop
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' | sudo tee --append $SPARK_HOME/conf/spark-env.sh > /dev/null
 
-echo 'datanode1' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
+echo 'datanode1
+datanode2
+datanode3
+datanode4
+datanode5
+datanode6
+datanode7
+datanode8' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
 
 sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
 
