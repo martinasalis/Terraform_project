@@ -5,6 +5,7 @@ provider "aws" {
   token = var.token
 }
 
+# Create VPC
 resource "aws_vpc" "personal_vpc" {
   cidr_block = "172.31.0.0/16"
   enable_dns_support = "true"
@@ -14,6 +15,7 @@ resource "aws_vpc" "personal_vpc" {
   instance_tenancy = "default"
 }
 
+# Create Subnet
 resource "aws_subnet" "personal_subnet" {
   vpc_id = aws_vpc.personal_vpc.id
   cidr_block = "172.31.64.0/20"
@@ -21,10 +23,12 @@ resource "aws_subnet" "personal_subnet" {
   availability_zone = "us-east-1f"
 }
 
+# Create Gateway
 resource "aws_internet_gateway" "personal_gateway" {
   vpc_id = aws_vpc.personal_vpc.id
 }
 
+# Create Route Table
 resource "aws_route_table" "personal_route_table" {
   vpc_id = aws_vpc.personal_vpc.id
 
@@ -39,6 +43,7 @@ resource "aws_route_table_association" "personal_subnet_route_table" {
   route_table_id = aws_route_table.personal_route_table.id
 }
 
+# Create Security group
 resource "aws_security_group" "all_traffic" {
   vpc_id = aws_vpc.personal_vpc.id
   name = "all_traffic"
@@ -58,6 +63,7 @@ resource "aws_security_group" "all_traffic" {
   }
 }
 
+# Master node
 resource "aws_instance" "master" {
   subnet_id = aws_subnet.personal_subnet.id
   ami = "ami-0885b1f6bd170450c"
@@ -69,6 +75,7 @@ resource "aws_instance" "master" {
   private_ip = var.master_ip
   vpc_security_group_ids = [aws_security_group.all_traffic.id]
 
+  # Copy configuration file
   provisioner "file" {
     source = "install_master.sh"
     destination = "/tmp/install_master.sh"
@@ -85,6 +92,7 @@ resource "aws_instance" "master" {
     command = "scp -o StrictHostKeyChecking=no -i '${var.aws_private_key_path}' ${var.aws_private_key_path} ubuntu@${self.public_dns}:/home/ubuntu/.ssh"
   }
 
+  # Exec configuration file
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_master.sh",
@@ -100,6 +108,7 @@ resource "aws_instance" "master" {
   }
 }
 
+# Slave nodes
 resource "aws_instance" "slaves" {
   subnet_id = aws_subnet.personal_subnet.id
   ami = "ami-0885b1f6bd170450c"
@@ -112,6 +121,7 @@ resource "aws_instance" "slaves" {
   private_ip = lookup(var.slaves_ip, count.index)
   vpc_security_group_ids = [aws_security_group.all_traffic.id]
 
+  # Copy configuration file
   provisioner "file" {
     source = "install_slaves.sh"
     destination = "/tmp/install_slaves.sh"
@@ -124,6 +134,7 @@ resource "aws_instance" "slaves" {
     }
   }
 
+  # Exec configuration file
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_slaves.sh",

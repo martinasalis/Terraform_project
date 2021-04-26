@@ -4,9 +4,9 @@ until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
   sleep 1
 done
 
+# Update and install packages
 sudo apt-get -y update > /dev/null
 sudo apt-get -y dist-upgrade > /dev/null
-
 sudo apt-get -y install git > /dev/null
 sudo apt-get -y install python3 > /dev/null
 sudo apt-get -y install python3-pip > /dev/null
@@ -18,11 +18,13 @@ sudo apt-get -y install openjdk-8-jdk > /dev/null
 echo 'StrictHostKeyChecking no
 UserKnownHostsFile /dev/null' | sudo tee --append /etc/ssh/ssh_config > /dev/null
 
+# Download Hadoop
 wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz > /dev/null
 sudo tar zxvf hadoop-2.7.7.tar.gz > /dev/null
 sudo mv ./hadoop-2.7.7 /home/ubuntu/hadoop
 rm hadoop-2.7.7.tar.gz
 
+# Set paths
 echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 export HADOOP_HOME=/home/ubuntu/hadoop
@@ -32,6 +34,7 @@ export PYSPARK_PYTHON=python3' | sudo tee --append /home/ubuntu/.profile > /dev/
 
 source /home/ubuntu/.profile
 
+# Define hosts name
 echo "Host namenode
 HostName namenode
 User ubuntu
@@ -77,6 +80,7 @@ HostName datanode8
 User ubuntu
 IdentityFile /home/ubuntu/.ssh/$1" | sudo tee /home/ubuntu/.ssh/config > /dev/null
 
+# Define hosts ip
 echo '172.31.67.1 namenode
 172.31.67.2 datanode1
 172.31.67.3 datanode2
@@ -87,6 +91,7 @@ echo '172.31.67.1 namenode
 172.31.67.8 datanode7
 172.31.67.9 datanode8' | sudo tee --append /etc/hosts > /dev/null
 
+# Create public key
 sudo chmod 700 /home/ubuntu/.ssh
 ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -P ''
 sudo touch /home/ubuntu/.ssh/authorized_keys
@@ -103,6 +108,7 @@ ssh datanode8 'cat >> /home/ubuntu/.ssh/authorized_keys' < /home/ubuntu/.ssh/id_
 
 sudo sed -i -e 's/export\ JAVA_HOME=\${JAVA_HOME}/export\ JAVA_HOME=\/usr\/lib\/jvm\/java-8-openjdk-amd64/g' $HADOOP_CONF_DIR/hadoop-env.sh
 
+# Hadoop configuration
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <!--
@@ -223,6 +229,7 @@ limitations under the License. See accompanying LICENSE file.
 sudo mkdir -p $HADOOP_HOME/data/hdfs/namenode
 sudo mkdir -p $HADOOP_HOME/data/hdfs/datanode
 
+# Define Hadoop hosts
 echo 'namenode' | sudo tee $HADOOP_CONF_DIR/masters > /dev/null
 
 echo 'datanode1
@@ -236,11 +243,13 @@ datanode8' | sudo tee $HADOOP_CONF_DIR/slaves > /dev/null
 
 sudo chown -R ubuntu $HADOOP_HOME
 
+# Download Spark
 wget https://archive.apache.org/dist/spark/spark-3.0.1/spark-3.0.1-bin-hadoop2.7.tgz > /dev/null
 tar xvzf spark-3.0.1-bin-hadoop2.7.tgz > /dev/null
 sudo mv ./spark-3.0.1-bin-hadoop2.7 /home/ubuntu/spark
 rm spark-3.0.1-bin-hadoop2.7.tgz
 
+# Spark configuration
 echo '
 export SPARK_HOME=/home/ubuntu/spark
 export PATH=$PATH:$SPARK_HOME/bin' | sudo tee --append /home/ubuntu/.profile > /dev/null
@@ -265,6 +274,7 @@ datanode8' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
 
 sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
 
+# Stark Hadoop and Spark
 hdfs namenode -format
 $HADOOP_HOME/sbin/start-dfs.sh
 $HADOOP_HOME/sbin/start-yarn.sh

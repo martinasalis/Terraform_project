@@ -1,31 +1,31 @@
 variable "access_key" {
   type = string
-  default = ""
+  default = "<your access key>"  # Insert your access key
 }
 
 variable "secret_key" {
   type = string
-  default = ""
+  default = "<your secret key>"  # Insert your secret key
 }
 
 variable "token" {
   type = string
-  default = ""
+  default = "<your token>"  # Insert your token
 }
 
 variable "slaves_count" {
   type = number
-  default = 1
+  default = 1   # Set the number of slaves of the cluster
 }
 
 variable "aws_private_key_name" {
   type = string
-  default = "Key_01"
+  default = "<your key>"  # Insert name of your private key
 }
 
 variable "aws_private_key_path" {
   type = string
-  default = "Key_01.pem"
+  default = "<your key.pem>"  # Insert name and file extension of your private key
 }
 
 variable "master_ip" {
