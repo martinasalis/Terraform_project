@@ -1,5 +1,9 @@
 # Terraform project
 
+1. [Software version](#Software-version)
+2. [Run project](#Run-project)
+3. [Contributors](#Contributors)
+
 ## Software version
 
 * Default AMI: ami-0885b1f6bd170450c
@@ -66,3 +70,8 @@ $SPARK_HOME/bin/spark-submit --master spark://namenode:7077 your_app.py
 ```bash
 terraform destroy
 ```
+
+## Contributors
+
+[Martina Salis](https://github.com/martinasalis) <br/>
+[Luca Grassi](https://github.com/Luca14797)
