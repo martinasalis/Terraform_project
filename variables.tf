@@ -1,16 +1,16 @@
 variable "access_key" {
   type = string
-  default = "<your access key>"  # Insert your access key
+  default = ""  # Insert your access key
 }
 
 variable "secret_key" {
   type = string
-  default = "<your secret key>"  # Insert your secret key
+  default = ""  # Insert your secret key
 }
 
 variable "token" {
   type = string
-  default = "<your token>"  # Insert your token
+  default = ""  # Insert your token
 }
 
 variable "slaves_count" {
@@ -20,12 +20,12 @@ variable "slaves_count" {
 
 variable "aws_private_key_name" {
   type = string
-  default = "<your key>"  # Insert name of your private key
+  default = ""  # Insert name of your private key
 }
 
 variable "aws_private_key_path" {
   type = string
-  default = "<your key.pem>"  # Insert name and file extension of your private key
+  default = ""  # Insert name and file extension of your private key
 }
 
 variable "master_ip" {
