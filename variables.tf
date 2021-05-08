@@ -63,3 +63,8 @@ variable "slaves_ip" {
     "7" = "172.31.67.9"
   }
 }
+
+variable "machine_cores" {
+  type = number
+  default = 2
+}

@@ -96,7 +96,7 @@ resource "aws_instance" "master" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_master.sh",
-      "/bin/bash /tmp/install_master.sh ${var.aws_private_key_path}",
+      "/bin/bash /tmp/install_master.sh ${var.aws_private_key_path} ${var.slaves_count * var.machine_cores}",
     ]
 
     connection {
@@ -138,7 +138,7 @@ resource "aws_instance" "slaves" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install_slaves.sh",
-      "/bin/bash /tmp/install_slaves.sh",
+      "/bin/bash /tmp/install_slaves.sh ${var.slaves_count * var.machine_cores}",
     ]
 
     connection {

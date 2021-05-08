@@ -274,6 +274,8 @@ datanode8' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
 
 sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
 
+echo "spark.default.parallelism		$2" | sudo tee --append $SPARK_HOME/conf/spark-defaults.conf > /dev/null
+
 # Stark Hadoop and Spark
 hdfs namenode -format
 $HADOOP_HOME/sbin/start-dfs.sh
