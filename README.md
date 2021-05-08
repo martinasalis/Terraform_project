@@ -1,8 +1,9 @@
 # Terraform project
 
 1. [Software version](#Software-version)
-2. [Run project](#Run-project)
-3. [Contributors](#Contributors)
+2. [Hardware version](#Hardware-version)
+3. [Run project](#Run-project)
+4. [Contributors](#Contributors)
 
 ## Software version
 
@@ -11,6 +12,10 @@
 * Hadoop: 2.7.7
 * Python: 3.8
 * Java: openjdk-8-jdk
+
+## Hardware version
+
+* Default AWS instances: t2.large
 
 ## Run project
 
