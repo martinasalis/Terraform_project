@@ -66,8 +66,8 @@ resource "aws_security_group" "all_traffic" {
 # Master node
 resource "aws_instance" "master" {
   subnet_id = aws_subnet.personal_subnet.id
-  ami = "ami-0885b1f6bd170450c"
-  instance_type = "t2.large"
+  ami = "ami-09e67e426f25ce0d7"
+  instance_type = "t2.medium"
   key_name = var.aws_private_key_name
   tags = {
     Name = "master"
@@ -111,8 +111,8 @@ resource "aws_instance" "master" {
 # Slave nodes
 resource "aws_instance" "slaves" {
   subnet_id = aws_subnet.personal_subnet.id
-  ami = "ami-0885b1f6bd170450c"
-  instance_type = "t2.large"
+  ami = "ami-09e67e426f25ce0d7"
+  instance_type = "t2.medium"
   key_name = var.aws_private_key_name
   count = var.slaves_count
   tags = {
