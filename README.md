@@ -27,7 +27,7 @@
 git clone https://github.com/martinasalis/Terraform_project.git
 ```
 
-3. Enter in the Terraform project directory
+3. Enter in the Terraform project directory.
 ```bash
 cd Terraform_project/
 ```
@@ -42,7 +42,7 @@ chmod 400 <YOUR KEY NAME>.pem
 
 
 5. Open the file ```terraform.tfvars``` and insert your data.
-   * If you are using AWS Educate you can retrive your values in the Vocareum page you get after having logged in by clicking on the button "Account Details" under the voice "AWS CLI".
+   * If you are using AWS Educate you can retrieve your values in the Vocareum page you get after having logged in by clicking on the button "Account Details" under the voice "AWS CLI".
    * If you are using the normal AWS follow the guide on [this](https://aws.amazon.com/it/blogs/security/how-to-find-update-access-keys-password-mfa-aws-management-console/) page in the paragraph called "Generate access keys for programmatic access".
 
    The maximum number of worker nodes is 8.
@@ -67,7 +67,7 @@ terraform apply
 ssh -i '<YOUR KEY NAME>.pem' ubuntu@<PUBLIC DNS>
 ```
 
-8. Start Hadoop and Spark cluster by inseting this commands (one by one):
+8. Start Hadoop and Spark cluster by inserting these commands (one by one):
 ```bash
 hdfs namenode -format
 $HADOOP_HOME/sbin/start-dfs.sh
