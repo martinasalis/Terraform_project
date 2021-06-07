@@ -15,7 +15,7 @@
 
 ## Hardware version
 
-* Default AWS instances: t2.medium
+* Default AWS instances: ```t2.medium```
 
 ## Run project
 
