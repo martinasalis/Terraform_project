@@ -12,6 +12,7 @@ sudo apt-get -y install python3 > /dev/null
 sudo apt-get -y install python3-pip > /dev/null
 
 pip3 install numpy > /dev/null
+pip3 install boto3 > /dev/null
 
 sudo apt-get -y install openjdk-8-jdk > /dev/null
 
@@ -198,6 +199,3 @@ datanode8' | sudo tee --append $SPARK_HOME/conf/slaves > /dev/null
 sudo cp $SPARK_HOME/conf/spark-defaults.conf.template $SPARK_HOME/conf/spark-defaults.conf
 
 echo "spark.default.parallelism		$1" | sudo tee --append $SPARK_HOME/conf/spark-defaults.conf > /dev/null
-
-# Start Spark
-$SPARK_HOME/sbin/start-slave.sh spark://namenode:7077

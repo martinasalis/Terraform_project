@@ -67,19 +67,28 @@ terraform apply
 ssh -i '<YOUR KEY NAME>.pem' ubuntu@<PUBLIC DNS>
 ```
 
-8. During execution of the project you can control it on the Spark GUI on your browser.
+8. Start Hadoop and Spark cluster by inseting this commands (one by one):
+```bash
+hdfs namenode -format
+$HADOOP_HOME/sbin/start-dfs.sh
+$HADOOP_HOME/sbin/start-yarn.sh
+$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver
+$SPARK_HOME/sbin/start-master.sh
+$SPARK_HOME/sbin/start-slaves.sh spark://namenode:7077
+```
+
+9. During execution of the project you can control it on the Spark GUI on your browser.
    Connect to ```<PUBLIC IP>:8080```.
 
-
-9. Now you are ready to execute your application. Use the command below.
+10. Now you are ready to execute your application. Use the command below.
    Replace ```your_app.py``` with the name of your application's main file.
 ```bash
 $SPARK_HOME/bin/spark-submit --master spark://namenode:7077 your_app.py
 ```
 
-10. After the execution is finished, exit from master node.
+11. After the execution is finished, exit from master node.
 
-11. Destroy the cluster using this command:
+12. Destroy the cluster using this command:
 ```bash
 terraform destroy
 ```
