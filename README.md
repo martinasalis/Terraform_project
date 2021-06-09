@@ -7,7 +7,7 @@
 
 ## Software version
 
-* Default AMI: ami-0885b1f6bd170450c
+* Default AMI: ami-09e67e426f25ce0d7
 * Spark: 3.0.1
 * Hadoop: 2.7.7
 * Python: 3.8
@@ -22,7 +22,7 @@
 1. [Download and Install](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started) Terraform
 
 
-2. Download this project from github.
+2. Download this project from GitHub.
 ```bash
 git clone https://github.com/martinasalis/Terraform_project.git
 ```
