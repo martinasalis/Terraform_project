@@ -12,7 +12,6 @@ sudo apt-get -y install python3 > /dev/null
 sudo apt-get -y install python3-pip > /dev/null
 
 pip3 install numpy > /dev/null
-pip3 install boto3 > /dev/null
 
 sudo apt-get -y install openjdk-8-jdk > /dev/null
 
